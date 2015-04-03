@@ -251,6 +251,20 @@ func (v *Cmd) Download(dir string) error {
 	return v.run(dir, v.DownloadCmd)
 }
 
+// DownloadAtRev downloads any new changes for the repo in dir at the specified revision
+// dir must be a valid VCS repo compatible with v.
+func (v *Cmd) DownloadAtRev(dir string, rev string) error {
+        tagcmd := v.TagSyncDefault
+        if rev != "" {
+           tagcmd = v.TagSyncCmd
+        }
+        err := v.run(dir, tagcmd, "tag", rev)
+        if err != nil {
+           return err
+        }
+	return v.run(dir, v.DownloadCmd)
+}
+
 // Tags returns the list of available tags for the repo in dir.
 // dir must be a valid VCS repo compatible with v.
 func (v *Cmd) Tags(dir string) ([]string, error) {
